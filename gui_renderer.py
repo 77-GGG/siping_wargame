@@ -617,10 +617,14 @@ def draw_title_screen(surface, screen_w, screen_h, hover_btn=-1):
                      color=(80, 40, 40), hover=(hover_btn == 3))
     buttons.append(r4)
 
-    draw_text(surface, "基于杀戮尖塔(Slay the Spire)战斗机制", (cx, BASE_H - 55),
-              size=13, color=C_DARK_GRAY, anchor="center")
+    draw_text(surface, "由史纲汇报第十二组和Claude Code共同制作", (cx, BASE_H - 98),
+              size=15, color=C_DARK_GRAY, anchor="center")
+    draw_text(surface, "项目仓库地址:https://github.com/77-GGG/siping_wargame", (cx, BASE_H - 78),
+              size=15, color=C_DARK_GRAY, anchor="center")
+    draw_text(surface, "基于杀戮尖塔(Slay the Spire)战斗机制", (cx, BASE_H - 58),
+              size=15, color=C_DARK_GRAY, anchor="center")
     draw_text(surface, "以毛泽东军事思想为理论依据", (cx, BASE_H - 38),
-              size=13, color=C_DARK_GRAY, anchor="center")
+              size=15, color=C_DARK_GRAY, anchor="center")
 
     return buttons
 
