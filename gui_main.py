@@ -531,12 +531,12 @@ class Game:
 
         phase_names = {1: "运动防御", 2: "城防对峙", 3: "塔子山危机"}
         R.draw_text(self.screen, f"【史实演示】 阶段{s.phase}: {phase_names.get(s.phase, '')}",
-                    (R.BASE_W // 2, 2), size=14, color=R.C_CYAN, anchor="midtop")
+                    (10, 4), size=14, color=R.C_CYAN, anchor="topleft")
 
         if self.auto_phase_text:
             for i, line in enumerate(self.auto_phase_text.split('\n')):
-                R.draw_text(self.screen, line, (R.BASE_W // 2, 22 + i * 22),
-                            size=16, color=R.C_CYAN, anchor="midtop")
+                R.draw_text(self.screen, line, (10, 24 + i * 22),
+                            size=16, color=R.C_CYAN, anchor="topleft")
 
         self.enemy_rects = R.draw_enemies(self.screen, s.enemies, L_ENEMIES)
         R.draw_player_panel(self.screen, p, s.phase, s.turn, L_PLAYER)
