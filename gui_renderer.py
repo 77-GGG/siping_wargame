@@ -261,30 +261,30 @@ def draw_card(surface, card, x, y, w=140, h=190, hover=False, selected=False, in
                          (S(x + 3), S(y + 3), S(w - 6), S(6)), border_radius=S(3))
 
     # 费用圆圈
-    cost_cx, cost_cy = S(x + 18), S(y + 22)
-    cr = S(14)
+    cost_cx, cost_cy = S(x + 20), S(y + 24)
+    cr = S(16)
     pygame.draw.circle(surface, C_GOLD, (cost_cx, cost_cy), cr)
     pygame.draw.circle(surface, C_BLACK, (cost_cx, cost_cy), cr, max(1, S(2)))
-    draw_text(surface, str(card.cost), (x + 18, y + 22), size=18, color=C_BLACK, anchor="center")
+    draw_text(surface, str(card.cost), (x + 20, y + 24), size=20, color=C_BLACK, anchor="center")
 
     # 名称
-    draw_text(surface, card.name, (x + 36, y + 14), size=16, color=C_WHITE, max_width=w - 44)
+    draw_text(surface, card.name, (x + 40, y + 15), size=17, color=C_WHITE, max_width=w - 48)
 
     # 类型
-    draw_text(surface, card.card_type, (x + w - 10, y + 14), size=12,
+    draw_text(surface, card.card_type, (x + w - 8, y + 36), size=12,
               color=colors["border"], anchor="topright")
 
     # 分隔线
     pygame.draw.line(surface, colors["border"],
-                     (S(x + 8), S(y + 40)), (S(x + w - 8), S(y + 40)), max(1, S(1)))
+                     (S(x + 8), S(y + 44)), (S(x + w - 8), S(y + 44)), max(1, S(1)))
 
     # 描述
-    draw_text_wrapped(surface, card.description, (x + 8, y + 48, w - 16, h - 60),
-                      size=13, color=C_WHITE)
+    draw_text_wrapped(surface, card.description, (x + 8, y + 52, w - 16, h - 66),
+                      size=14, color=C_WHITE, line_spacing=3)
 
     # 编号
     if index is not None:
-        draw_text(surface, f"[{index}]", (x + w // 2, y + h - 16), size=11,
+        draw_text(surface, f"[{index}]", (x + w // 2, y + h - 16), size=12,
                   color=C_GRAY, anchor="center")
 
     return pygame.Rect(S(x), S(y), S(w), S(h))
@@ -293,16 +293,16 @@ def draw_card(surface, card, x, y, w=140, h=190, hover=False, selected=False, in
 def draw_hand(surface, hand, area_rect, hover_idx=-1, selected_idx=-1):
     """绘制手牌区域（area_rect为逻辑坐标），返回实际像素矩形列表"""
     ax, ay, aw, ah = area_rect
-    card_w, card_h = 130, 180
+    card_w, card_h = 140, 190
     rects = []
     if not hand:
         draw_text(surface, "（无手牌）", (ax + aw // 2, ay + ah // 2),
-                  size=18, color=C_GRAY, anchor="center")
+                  size=20, color=C_GRAY, anchor="center")
         return rects
 
     total_w = len(hand) * (card_w + 8) - 8
     if total_w > aw:
-        gap = max(20, (aw - card_w) // max(1, len(hand) - 1))
+        gap = max(24, (aw - card_w) // max(1, len(hand) - 1))
     else:
         gap = card_w + 8
 
@@ -310,7 +310,7 @@ def draw_hand(surface, hand, area_rect, hover_idx=-1, selected_idx=-1):
 
     for i, card in enumerate(hand):
         cx = start_x + i * gap
-        cy = ay + 10
+        cy = ay + 8
         is_hover = (i == hover_idx)
         is_selected = (i == selected_idx)
         r = draw_card(surface, card, cx, cy, card_w, card_h,
@@ -323,43 +323,43 @@ def draw_hand(surface, hand, area_rect, hover_idx=-1, selected_idx=-1):
 #  敌人绘制
 # ══════════════════════════════════════
 
-def draw_enemy(surface, enemy, x, y, w=200, h=180, hover=False, index=0):
+def draw_enemy(surface, enemy, x, y, w=230, h=220, hover=False, index=0):
     """绘制敌人（逻辑坐标）"""
-    enemy_img = assets.get_enemy_image(enemy.name, (S(w - 20), S(80)))
+    enemy_img = assets.get_enemy_image(enemy.name, (S(w - 20), S(90)))
     if enemy_img:
         surface.blit(enemy_img, (S(x + 10), S(y + 10)))
     else:
         border_c = C_YELLOW if hover else C_RED
         draw_rounded_rect(surface, C_RED_DARK, (x, y, w, h), radius=8,
                           border=2, border_color=border_c)
-        cx_s, cy_s = S(x + w // 2), S(y + 45)
-        pygame.draw.circle(surface, C_RED, (cx_s, cy_s - S(10)), S(18))
+        cx_s, cy_s = S(x + w // 2), S(y + 50)
+        pygame.draw.circle(surface, C_RED, (cx_s, cy_s - S(12)), S(20))
         pygame.draw.rect(surface, C_RED,
-                         (cx_s - S(15), cy_s + S(8), S(30), S(30)))
-        draw_text(surface, str(index + 1), (x + w // 2, y + 35),
-                  size=16, color=C_WHITE, anchor="center")
+                         (cx_s - S(17), cy_s + S(8), S(34), S(32)))
+        draw_text(surface, str(index + 1), (x + w // 2, y + 38),
+                  size=18, color=C_WHITE, anchor="center")
 
-    draw_text(surface, enemy.name, (x + w // 2, y + 80), size=14, color=C_WHITE,
+    draw_text(surface, enemy.name, (x + w // 2, y + 96), size=17, color=C_WHITE,
               anchor="midtop", max_width=w - 10)
 
-    draw_hp_bar(surface, x + 10, y + 100, w - 20, 14, enemy.hp, enemy.hp_max, C_RED)
-    draw_text(surface, f"{enemy.hp}/{enemy.hp_max}", (x + w // 2, y + 101),
-              size=12, color=C_WHITE, anchor="midtop")
+    draw_hp_bar(surface, x + 10, y + 120, w - 20, 16, enemy.hp, enemy.hp_max, C_RED)
+    draw_text(surface, f"{enemy.hp}/{enemy.hp_max}", (x + w // 2, y + 120),
+              size=13, color=C_WHITE, anchor="midtop")
 
     atk = enemy.get_attack()
     intent_map = {"attack": f"⚔{atk}", "defend": "🛡防御", "charge": "⚡蓄力"}
     intent_str = intent_map.get(enemy.intent, f"⚔{atk}")
-    draw_text(surface, f"攻:{atk}", (x + 10, y + 120), size=13, color=C_ORANGE)
-    draw_text(surface, f"意图:{intent_str}", (x + w - 10, y + 120), size=13,
+    draw_text(surface, f"攻:{atk}", (x + 10, y + 144), size=15, color=C_ORANGE)
+    draw_text(surface, f"意图:{intent_str}", (x + w - 10, y + 144), size=15,
               color=C_ORANGE, anchor="topright")
 
     if enemy.debuffs:
         debuff_str = " ".join(d.name for d in enemy.debuffs)
-        draw_text(surface, debuff_str, (x + 10, y + 140), size=11, color=C_PURPLE, max_width=w - 20)
+        draw_text(surface, debuff_str, (x + 10, y + 170), size=13, color=C_PURPLE, max_width=w - 20)
 
     if enemy.traits:
         trait_str = " ".join(enemy.traits)
-        draw_text(surface, trait_str, (x + 10, y + 158), size=11, color=C_CYAN, max_width=w - 20)
+        draw_text(surface, trait_str, (x + 10, y + 192), size=13, color=C_CYAN, max_width=w - 20)
 
     return pygame.Rect(S(x), S(y), S(w), S(h))
 
@@ -372,13 +372,13 @@ def draw_enemies(surface, enemies, area_rect, hover_idx=-1):
     if not alive:
         return rects
 
-    ew, eh = 200, 180
-    total_w = len(alive) * (ew + 20) - 20
+    ew, eh = 230, 220
+    total_w = len(alive) * (ew + 24) - 24
     start_x = ax + (aw - total_w) // 2
 
     for j, (i, e) in enumerate(alive):
-        ex = start_x + j * (ew + 20)
-        ey = ay + 10
+        ex = start_x + j * (ew + 24)
+        ey = ay + 8
         is_hover = (i == hover_idx)
         r = draw_enemy(surface, e, ex, ey, ew, eh, hover=is_hover, index=i)
         rects[i] = r
@@ -395,75 +395,76 @@ def draw_player_panel(surface, player, phase, turn, area_rect):
     draw_rounded_rect(surface, (30, 30, 45), (ax, ay, aw, ah), radius=10,
                       border=2, border_color=C_BLUE)
 
-    px = ax + 12
+    px = ax + 14
     py = ay + 8
 
-    draw_text(surface, f"{player.name}  阶段{phase} 回合{turn}", (px, py), size=18, color=C_GOLD)
-    py += 28
+    draw_text(surface, f"{player.name}  阶段{phase} 回合{turn}", (px, py), size=20, color=C_GOLD)
+    py += 30
 
-    bar_w = 160
-    bar_h = 14
+    label_w = 56
+    bar_w = 190
+    bar_h = 16
     layers = [
         ("阵地", player.hp.position, player.hp.position_max, C_GREEN),
         ("兵力", player.hp.troops, player.hp.troops_max, C_BLUE),
         ("指挥", player.hp.command, player.hp.command_max, C_RED),
     ]
     for name, cur, mx, color in layers:
-        draw_text(surface, name, (px, py), size=13, color=color)
-        draw_hp_bar(surface, px + 40, py + 1, bar_w, bar_h, cur, mx, color)
-        draw_text(surface, f"{cur}/{mx}", (px + 40 + bar_w + 5, py), size=12, color=C_WHITE)
-        py += 20
+        draw_text(surface, name, (px, py), size=15, color=color)
+        draw_hp_bar(surface, px + label_w, py + 2, bar_w, bar_h, cur, mx, color)
+        draw_text(surface, f"{cur}/{mx}", (px + label_w + bar_w + 6, py), size=13, color=C_WHITE)
+        py += 22
 
     if player.frontline_max > 0:
-        draw_text(surface, "防线", (px, py), size=13, color=C_ORANGE)
-        draw_hp_bar(surface, px + 40, py + 1, bar_w, bar_h,
+        draw_text(surface, "防线", (px, py), size=15, color=C_ORANGE)
+        draw_hp_bar(surface, px + label_w, py + 2, bar_w, bar_h,
                     player.frontline, player.frontline_max, C_ORANGE)
         draw_text(surface, f"{player.frontline}/{player.frontline_max}",
-                  (px + 40 + bar_w + 5, py), size=12, color=C_WHITE)
-        py += 20
+                  (px + label_w + bar_w + 6, py), size=13, color=C_WHITE)
+        py += 22
     if player.tazishan_max > 0:
-        draw_text(surface, "塔子山", (px, py), size=13, color=C_YELLOW)
-        draw_hp_bar(surface, px + 40, py + 1, bar_w, bar_h,
+        draw_text(surface, "塔子山", (px, py), size=15, color=C_YELLOW)
+        draw_hp_bar(surface, px + label_w, py + 2, bar_w, bar_h,
                     player.tazishan, player.tazishan_max, C_YELLOW)
         draw_text(surface, f"{player.tazishan}/{player.tazishan_max}",
-                  (px + 40 + bar_w + 5, py), size=12, color=C_WHITE)
-        py += 20
+                  (px + label_w + bar_w + 6, py), size=13, color=C_WHITE)
+        py += 22
 
     py += 4
     draw_text(surface, f"能量 {player.energy}/{player.get_energy()}", (px, py),
-              size=14, color=C_CYAN)
-    draw_text(surface, f"格挡 {player.block}", (px + 100, py), size=14, color=C_BLUE)
-    py += 20
-    draw_text(surface, f"灵活度 {player.flexibility}", (px, py), size=14, color=C_GREEN)
-    draw_text(surface, f"主动权 {player.initiative}", (px + 100, py), size=14, color=C_GOLD)
-    py += 20
+              size=16, color=C_CYAN)
+    draw_text(surface, f"格挡 {player.block}", (px + 130, py), size=16, color=C_BLUE)
+    py += 24
+    draw_text(surface, f"灵活度 {player.flexibility}", (px, py), size=16, color=C_GREEN)
+    draw_text(surface, f"主动权 {player.initiative}", (px + 130, py), size=16, color=C_GOLD)
+    py += 24
 
     draw_text(surface,
-              f"牌堆:{len(player.draw_pile)} 弃牌:{len(player.discard_pile)} 消耗:{len(player.exhaust_pile)}",
-              (px, py), size=12, color=C_GRAY)
-    py += 18
+              f"牌堆:{len(player.draw_pile)} 弃:{len(player.discard_pile)} 消耗:{len(player.exhaust_pile)}",
+              (px, py), size=13, color=C_GRAY)
+    py += 20
 
     if player.buffs:
         buff_str = " ".join(f"[{b.name}]" for b in player.buffs)
-        draw_text(surface, f"Buff: {buff_str}", (px, py), size=11,
-                  color=C_GREEN, max_width=aw - 24)
-        py += 16
+        draw_text(surface, f"Buff: {buff_str}", (px, py), size=13,
+                  color=C_GREEN, max_width=aw - 28)
+        py += 18
     if player.debuffs:
         debuff_str = " ".join(f"[{d.name}]" for d in player.debuffs)
-        draw_text(surface, f"Debuff: {debuff_str}", (px, py), size=11,
-                  color=C_RED, max_width=aw - 24)
+        draw_text(surface, f"Debuff: {debuff_str}", (px, py), size=13,
+                  color=C_RED, max_width=aw - 28)
 
 
 # ══════════════════════════════════════
 #  战斗日志面板
 # ══════════════════════════════════════
 
-def draw_log_panel(surface, logs, area_rect, max_lines=10):
+def draw_log_panel(surface, logs, area_rect, max_lines=11):
     ax, ay, aw, ah = area_rect
     draw_rounded_rect(surface, (20, 20, 30), (ax, ay, aw, ah), radius=8,
                       border=1, border_color=C_DARK_GRAY)
 
-    draw_text(surface, "战斗日志", (ax + 8, ay + 4), size=13, color=C_GOLD)
+    draw_text(surface, "战斗日志", (ax + 10, ay + 6), size=16, color=C_GOLD)
 
     recent = logs[-max_lines:]
     for i, log in enumerate(recent):
@@ -476,8 +477,8 @@ def draw_log_panel(surface, logs, area_rect, max_lines=10):
             color = C_BLUE
         elif "📜" in log or "政治" in log:
             color = C_CYAN
-        draw_text(surface, log.strip(), (ax + 8, ay + 22 + i * 16), size=11,
-                  color=color, max_width=aw - 16)
+        draw_text(surface, log.strip(), (ax + 10, ay + 32 + i * 20), size=13,
+                  color=color, max_width=aw - 20)
 
 
 # ══════════════════════════════════════
@@ -500,7 +501,7 @@ def draw_button(surface, text, rect, color=C_BLUE, hover=False, disabled=False):
         text_c = C_WHITE
 
     draw_rounded_rect(surface, bg, (x, y, w, h), radius=6, border=2, border_color=border_c)
-    draw_text(surface, text, (x + w // 2, y + h // 2), size=15, color=text_c, anchor="center")
+    draw_text(surface, text, (x + w // 2, y + h // 2), size=17, color=text_c, anchor="center")
     return pygame.Rect(S(x), S(y), S(w), S(h))
 
 
@@ -508,7 +509,7 @@ def draw_button(surface, text, rect, color=C_BLUE, hover=False, disabled=False):
 #  提示框
 # ══════════════════════════════════════
 
-def draw_tooltip(surface, text, pos, size=13):
+def draw_tooltip(surface, text, pos, size=15):
     """pos为实际屏幕像素坐标（鼠标位置），内部处理缩放"""
     actual_size = SF(size)
     font = fonts.get(actual_size)

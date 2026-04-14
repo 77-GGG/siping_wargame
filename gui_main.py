@@ -60,10 +60,10 @@ STATE_AUTO_ENEMY = "auto_enemy"
 FPS = 60
 
 # 逻辑布局区域（基于1200x800基准）
-L_ENEMIES = (0, 10, 1200, 210)
-L_PLAYER  = (10, 220, 290, 280)
-L_LOG     = (310, 220, 880, 280)
-L_HAND    = (0, 510, 1200, 210)
+L_ENEMIES = (0, 10, 1200, 235)
+L_PLAYER  = (10, 250, 340, 260)
+L_LOG     = (360, 250, 830, 260)
+L_HAND    = (0, 515, 1200, 205)
 L_BUTTONS = (10, 725, 1180, 60)
 
 
@@ -477,7 +477,7 @@ class Game:
 
         phase_names = {1: "运动防御", 2: "城防对峙", 3: "塔子山危机"}
         R.draw_text(self.screen, f"阶段{s.phase}: {phase_names.get(s.phase, '')}",
-                    (R.BASE_W // 2, 2), size=14, color=R.C_GOLD, anchor="midtop")
+                    (10, 4), size=16, color=R.C_GOLD, anchor="topleft")
 
         self.enemy_rects = R.draw_enemies(self.screen, s.enemies, L_ENEMIES, self.hover_enemy)
         R.draw_player_panel(self.screen, p, s.phase, s.turn, L_PLAYER)
@@ -508,7 +508,7 @@ class Game:
 
         if self.state == STATE_TARGETING:
             R.draw_text(self.screen, "▶ 点击敌人选择攻击目标 ◀",
-                        (R.BASE_W // 2, L_HAND[1] - 20), size=18,
+                        (R.BASE_W // 2, L_HAND[1] - 20), size=20,
                         color=R.C_YELLOW, anchor="center")
 
         self._render_float_texts()
@@ -531,12 +531,12 @@ class Game:
 
         phase_names = {1: "运动防御", 2: "城防对峙", 3: "塔子山危机"}
         R.draw_text(self.screen, f"【史实演示】 阶段{s.phase}: {phase_names.get(s.phase, '')}",
-                    (10, 4), size=14, color=R.C_CYAN, anchor="topleft")
+                    (10, 4), size=16, color=R.C_CYAN, anchor="topleft")
 
         if self.auto_phase_text:
             for i, line in enumerate(self.auto_phase_text.split('\n')):
-                R.draw_text(self.screen, line, (10, 24 + i * 22),
-                            size=16, color=R.C_CYAN, anchor="topleft")
+                R.draw_text(self.screen, line, (10, 28 + i * 24),
+                            size=17, color=R.C_CYAN, anchor="topleft")
 
         self.enemy_rects = R.draw_enemies(self.screen, s.enemies, L_ENEMIES)
         R.draw_player_panel(self.screen, p, s.phase, s.turn, L_PLAYER)
@@ -551,15 +551,15 @@ class Game:
             plan_y = L_HAND[1] - 30
             plan_text = "出牌计划: " + " → ".join(c.name for c in self.auto_cards_to_play)
             R.draw_text(self.screen, plan_text, (R.BASE_W // 2, plan_y),
-                        size=15, color=R.C_GOLD, anchor="center", max_width=R.BASE_W - 40)
+                        size=17, color=R.C_GOLD, anchor="center", max_width=R.BASE_W - 40)
 
         if self.state == STATE_AUTO_WAIT:
             R.draw_text(self.screen, "按 回车 执行出牌",
-                        (R.BASE_W // 2, R.BASE_H - 30), size=18,
+                        (R.BASE_W // 2, R.BASE_H - 30), size=20,
                         color=R.C_GREEN, anchor="center")
         elif self.state == STATE_AUTO_ENEMY:
             R.draw_text(self.screen, "按 回车 进入下一回合",
-                        (R.BASE_W // 2, R.BASE_H - 30), size=18,
+                        (R.BASE_W // 2, R.BASE_H - 30), size=20,
                         color=R.C_ORANGE, anchor="center")
 
         self._render_float_texts()
@@ -583,7 +583,7 @@ class Game:
 
     def _render_float_texts(self):
         for text, lx, ly, color, timer in self.float_texts:
-            R.draw_text(self.screen, text, (int(lx), int(ly)), size=16,
+            R.draw_text(self.screen, text, (int(lx), int(ly)), size=20,
                         color=color, anchor="center")
 
     def _render_message(self):
@@ -595,7 +595,7 @@ class Game:
             s.fill((0, 0, 0, alpha))
             self.screen.blit(s, (0, msg_y))
             R.draw_text(self.screen, self.message, (R.BASE_W // 2, L_HAND[1] - 20),
-                        size=15, color=R.C_WHITE, anchor="center")
+                        size=17, color=R.C_WHITE, anchor="center")
 
 
 def main():
